@@ -19,6 +19,12 @@ export function MapPage() {
     }])
 
     const interval = 2000
+    const markerImage = "/marker.png"
+
+    const imageShowSize = 30
+    const imageSize = { width: imageShowSize, height: imageShowSize }
+    const spriteSize = { width: imageShowSize, height: imageShowSize }
+    const storeOrigin = { x: 0, y: 0 }
 
     const getFirstLocation = async () => {
         const getLocation = await geolocation.get()
@@ -76,8 +82,17 @@ export function MapPage() {
                     strokeOpacity={0.7}
                     strokeStyle={"solid"}
                 />
-                <MapMarker position={{ lat: nowLocation.lat, lng: nowLocation.long }}></MapMarker>
-
+                {/* <MapMarker position={{ lat: nowLocation.lat, lng: nowLocation.long }}></MapMarker> */}
+                <MapMarker
+                    position={{ lat: nowLocation.lat, lng: nowLocation.long }} image={{
+                        src: markerImage,
+                        size: imageSize,
+                        options: {
+                            spriteSize: spriteSize,
+                            spriteOrigin: storeOrigin,
+                        },
+                    }}
+                />
             </Map>
         </>
 
