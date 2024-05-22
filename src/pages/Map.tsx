@@ -28,11 +28,12 @@ export function MapPage() {
 
     const getFirstLocation = async () => {
         const getLocation = await geolocation.get()
+        setLocationList([])
+
         setFirstLocation({
             long: getLocation?.long,
             lat: getLocation?.lat
         })
-
     }
 
     const getGeoLocation = async () => {
@@ -42,18 +43,14 @@ export function MapPage() {
             long: getLocation?.long,
             lat: getLocation?.lat
         })
-
-        if (locationList.length == 1) {
-            locationList.pop()
-        }
-
-        locationList.push({
-            long: getLocation?.long,
-            lat: getLocation?.lat
-        })
-
-        setLocationList([...locationList])
     }
+
+    useEffect(() => {
+        setLocationList([...locationList, {
+            long: nowLocation.long,
+            lat: nowLocation.lat
+        }])
+    }, [nowLocation])
 
     useEffect(() => {
         getFirstLocation()
@@ -79,7 +76,7 @@ export function MapPage() {
                     ]}
                     strokeWeight={5}
                     strokeColor={"#FFAE00"}
-                    strokeOpacity={0.7}
+                    strokeOpacity={1}
                     strokeStyle={"solid"}
                 />
                 {/* <MapMarker position={{ lat: nowLocation.lat, lng: nowLocation.long }}></MapMarker> */}
