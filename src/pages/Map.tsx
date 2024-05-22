@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react"
-import { Map, MapMarker } from "react-kakao-maps-sdk"
+import { Map, MapMarker, Polyline } from "react-kakao-maps-sdk"
 import { geolocation } from "../utils/getLocation"
 
 export function MapPage() {
+
+    const [firstLocation, setFirstLocation] = useState({
+        long: 33.5563,
+        lat: 126.79581,
+    })
     const [nowLocation, setNowLocation] = useState({
         long: 33.5563,
         lat: 126.79581,
@@ -13,6 +18,17 @@ export function MapPage() {
         lat: 126.79581,
     }])
 
+    const interval = 2000
+
+    const getFirstLocation = async () => {
+        const getLocation = await geolocation.get()
+        setFirstLocation({
+            long: getLocation?.long,
+            lat: getLocation?.lat
+        })
+
+    }
+
     const getGeoLocation = async () => {
         const getLocation = await geolocation.get()
         console.log(getLocation)
@@ -20,6 +36,10 @@ export function MapPage() {
             long: getLocation?.long,
             lat: getLocation?.lat
         })
+
+        if (locationList.length == 1) {
+            locationList.pop()
+        }
 
         locationList.push({
             long: getLocation?.long,
@@ -30,24 +50,33 @@ export function MapPage() {
     }
 
     useEffect(() => {
+        getFirstLocation()
         setInterval(() => {
             getGeoLocation()
 
-        }, 1000)
+        }, interval)
     }, [])
 
     return (
         <>
 
             <Map
-                center={{ lat: nowLocation.lat, lng: nowLocation.long }}
+                center={{ lat: firstLocation.lat, lng: firstLocation.long }}
                 style={{ width: "100%", height: "360px" }}
             >
-                {locationList.map(geo => (
-                    <MapMarker position={{ lat: geo.lat, lng: geo.long }}>
-                        <div style={{ color: "#000" }}>Hello World!</div>
-                    </MapMarker>
-                ))}
+
+                <Polyline
+                    path={[
+                        locationList.map(item => {
+                            return { lat: item.lat, lng: item.long }
+                        }),
+                    ]}
+                    strokeWeight={5}
+                    strokeColor={"#FFAE00"}
+                    strokeOpacity={0.7}
+                    strokeStyle={"solid"}
+                />
+                <MapMarker position={{ lat: nowLocation.lat, lng: nowLocation.long }}></MapMarker>
 
             </Map>
         </>
