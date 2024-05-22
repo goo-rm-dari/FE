@@ -18,6 +18,8 @@ export function MapPage() {
         lat: 126.79581,
     }])
 
+    const [trashCount, setTrashCount] = useState(0)
+
     const interval = 2000
     const markerImage = "/marker.png"
 
@@ -43,6 +45,10 @@ export function MapPage() {
             long: getLocation?.long,
             lat: getLocation?.lat
         })
+    }
+
+    const handleClickTrash = () => {
+        setTrashCount((trash) => trash + 1)
     }
 
     useEffect(() => {
@@ -91,6 +97,8 @@ export function MapPage() {
                     }}
                 />
             </Map>
+
+            <button onClick={handleClickTrash} className="absolute bottom-0 left-0 w-full bg-indigo-500 rounded-sm p-4 text-white z-10">{trashCount}개의 쓰레기를 주움</button>
         </>
 
     )
