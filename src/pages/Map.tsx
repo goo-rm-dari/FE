@@ -68,7 +68,7 @@ export function MapPage() {
 
             <Map
                 center={{ lat: firstLocation.lat, lng: firstLocation.long }}
-                style={{ width: "100%", height: "360px" }}
+                style={{ width: "100%", height: "100vh" }}
             >
 
                 <Polyline
