@@ -1,10 +1,16 @@
 import { useState } from "react";
+import { MapPage } from "./pages/Map";
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
     <>
+
+
+
+
+      <MapPage></MapPage>
       <div className="bg-color-black p-4">
         <button
           className="bg-red-200 p-2"
@@ -13,6 +19,8 @@ function App() {
           count is {count}
         </button>
       </div>
+
+
     </>
   );
 }
