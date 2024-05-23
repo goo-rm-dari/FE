@@ -4,42 +4,77 @@ import { useNavigate } from 'react-router-dom';
 
 import Icon from '../components/Icon/icon';
 import { geolocation } from '../utils/getLocation';
+import axios from 'axios';
 
-const DummyData = [
-  {
-    id: 1,
-    date: '2021.01.01 (목)',
-    trash: 3,
-    runTime: '28:12',
-    kcal: 133.6,
-    distance: 1.43,
-  },
-  {
-    id: 2,
-    date: '2021.01.02 (금)',
-    trash: 4,
-    runTime: '30:12',
-    kcal: 143.6,
-    distance: 1.53,
-  },
-  {
-    id: 3,
-    date: '2021.01.03 (토)',
-    trash: 5,
-    runTime: '31:12',
-    kcal: 153.6,
-    distance: 1.63,
-  },
-];
 
 const Main = () => {
   const [coordinates, setCoordinates] = useState<{
     lat: number;
     long: number;
   }>({ lat: 0, long: 0 });
+  const [DummyData, setDummyData] = useState([
+    {
+      id: 1,
+      date: '2021.01.01 (목)',
+      trash: 3,
+      runTime: '28:12',
+      kcal: 133.6,
+      distance: 1.43,
+    },
+    {
+      id: 2,
+      date: '2021.01.02 (금)',
+      trash: 4,
+      runTime: '30:12',
+      kcal: 143.6,
+      distance: 1.53,
+    },
+    {
+      id: 3,
+      date: '2021.01.03 (토)',
+      trash: 5,
+      runTime: '31:12',
+      kcal: 153.6,
+      distance: 1.63,
+    },
+  ])
+
   const [address, setAddress] = useState<string>('서귀포시 성산읍');
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
+
+  const getRecords = async () => {
+
+    try {
+      const userId = localStorage.getItem('userId');
+
+      const response = await axios.get(`https://kade3b2277062a.user-app.krampoline.com/api/plogging-records/${userId}`)
+      const result = response.data.data.info;
+
+      console.log(result)
+
+      if (result.length > 0) {
+        setDummyData([])
+      }
+
+      for (let index = 0; index < result.length; index++) {
+        const element = result[index];
+        setDummyData([...DummyData, {
+          id: index,
+          date: element.createdTime,
+          trash: parseFloat(element.trashCount),
+          runTime: element.movingTime,
+          kcal: parseFloat(element.totalCalorie),
+          distance: parseFloat(element.movingDistance),
+        }])
+      }
+
+
+    } catch (err) {
+      console.log("Error >>", err);
+    }
+  }
+
   useEffect(() => {
     const fetchGeolocation = async () => {
       try {
@@ -55,6 +90,7 @@ const Main = () => {
     };
 
     fetchGeolocation();
+    getRecords()
   }, []);
 
   useEffect(() => {

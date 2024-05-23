@@ -10,9 +10,10 @@ import {
 } from '../components/Button';
 import { Title } from '../components/Title';
 import { TopShadow } from '../components/TopShadow';
-import { useDone } from '../hooks/useDone';
+import { DataType, useDone } from '../hooks/useDone';
 import { geolocation } from '../utils/getLocation';
 import { CheckTrashPage } from './CheckTrash';
+import axios from 'axios';
 
 interface Location {
   lat: number | null;
@@ -112,6 +113,37 @@ function MapPage() {
     return Math.round(moveLine.getLength());
   };
 
+  const sendRecords = async (form: DataType) => {
+
+    try {
+      const userId = localStorage.getItem('userId');
+
+      const response = await axios.post(`https://kade3b2277062a.user-app.krampoline.com/api/plogging-records`, {
+        "memberId": userId,
+        "movingCoordinates": form.locationList.map((item) => {
+          return {
+            "lat": item.lat,
+            "lng": item.long
+          }
+        }),
+        "trashCoordinates": trashLocationList.map((item => {
+          return {
+            "lat": item.lat,
+            "lng": item.long
+          }
+        })),
+        "totalCalories": form.kcal,
+        "movingTime": duration,
+        "movingDistance": parseFloat(form.distance)
+      })
+
+      console.log(response)
+
+    } catch (err) {
+      console.log("Error >>", err);
+    }
+  }
+
   const addTrash = async () => {
     setTrashCount(trash => trash + 1);
 
@@ -144,6 +176,8 @@ function MapPage() {
     setIsModalOpen(false);
   };
 
+
+
   const handleClickTrash = () => {
 
     setIsModalOpen(true);
@@ -160,6 +194,7 @@ function MapPage() {
       kcal: kcal,
     };
     console.log(createPloggingForm);
+    sendRecords(createPloggingForm)
     done(createPloggingForm);
     navigate('/plogging/done');
   };
