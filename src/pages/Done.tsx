@@ -4,7 +4,7 @@ import { Progressbar } from "../components/Progress";
 import { Title } from "../components/Title";
 import { DataType, useDone } from "../hooks/useDone";
 import { useEffect, useState } from "react";
-import { Map, MapMarker, Polyline } from 'react-kakao-maps-sdk';
+import { Map, Polyline } from 'react-kakao-maps-sdk';
 
 
 export function DonePage() {
@@ -23,6 +23,7 @@ export function DonePage() {
 
     useEffect(() => {
         setData(get())
+        console.log(data)
     }, [])
 
     return (
