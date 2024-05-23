@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
+import { PrimaryButton } from '../components/Button';
 
 const LoginButton = () => {
   const navigate = useNavigate();
@@ -24,12 +25,11 @@ const LoginButton = () => {
 
   return (
     <div className='w-full'>
-      <button
-        className='h-[53.7px] w-full bg-gray-300 p-4'
+      <PrimaryButton
         onClick={handleClickButton}
       >
         산책정보 입력하기
-      </button>
+      </PrimaryButton>
     </div>
   );
 };

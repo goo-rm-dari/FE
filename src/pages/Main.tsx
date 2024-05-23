@@ -77,7 +77,9 @@ const Main = () => {
   if (loading) {
     return (
       <div className='flex h-full items-center justify-center'>
-        <span>Loading...</span>
+        <span className="material-symbols-outlined animate-spin">
+          progress_activity
+        </span>
       </div>
     );
   }
@@ -87,10 +89,10 @@ const Main = () => {
   };
 
   return (
-    <div className='relative flex grow flex-col gap-5 p-6 pt-[60px]'>
-      <span className='text-[30px]'>{address}</span>
-      <span className='text-gray-500'>최근 플로깅</span>
-      <div className='flex flex-col gap-6'>
+    <div className='relative flex grow flex-col gap-5 pt-[60px]'>
+      <span className='text-[30px] px-6'>{address}</span>
+      <span className='text-gray-500 px-6'>최근 플로깅</span>
+      <div className='flex flex-col gap-6 px-6'>
         {DummyData.map((data, index) => (
           <div
             key={`${data.id} - ${index}`}
@@ -113,12 +115,18 @@ const Main = () => {
           </div>
         ))}
       </div>
-      <button
-        onClick={handleMoveToPlogging}
-        className='mx-auto mt-40 h-[111px] w-[111px] w-fit rounded-full bg-gray-200 p-4'
-      >
-        플로깅 시작
-      </button>
+
+      <div className="absolute bottom-2 w-full justify-center pb-6 flex">
+
+        <button
+          onClick={handleMoveToPlogging}
+          className='mx-auto mt-40 h-[111px] w-[111px] rounded-full bg-gray-200 p-4 text-gray-50'
+          style={{ backgroundColor: "#7FD6E1" }}
+        >
+          플로깅 시작
+        </button>
+      </div>
+
     </div>
   );
 };
