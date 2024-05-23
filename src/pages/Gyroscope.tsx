@@ -3,6 +3,8 @@ import { getGyroLocation } from "../math/getGyroLocation";
 import { LineGraph } from "../components/Graph";
 import * as THREE from 'three';
 import wt from 'discrete-wavelets';
+import { Complex } from "../math/complex";
+import { fft } from "../math/fft";
 
 export function GyroscopePage() {
   const [acceleration, setAcceleration] = useState({
@@ -32,6 +34,7 @@ export function GyroscopePage() {
   const [isGranted, setIsGranted] = useState(false);
   const [data, setData] = useState(new getGyroLocation());
   const [wtData, setWtData] = useState<number[][]>([[]]);
+  const [fftData, setFftData] = useState<Complex[]>([]);
 
   const onDevicemotion = (event: any) => {
     setAcceleration({
@@ -131,11 +134,23 @@ export function GyroscopePage() {
   }, [acceleration]);
 
   useEffect(() => {
-    const range = 20
-    const getRange = wtData.slice(wtData.length - range - 1, wtData.length - 1)
+    //const range = wtData.length / 2
+    if (wtData.length > 0) {
+      const getRange = wtMap.slice(0, wtMap.length - (wtMap.length / 2))
+      const maped = getRange.map(x => {
+        return x.z
+      })
+
+      const result = fft(maped)
+
+      setFftData(result)
+    }
+
   }, [wtData])
 
   useEffect(() => {
+    setData(new getGyroLocation())
+    console.log(location, velocity)
     const acc = new THREE.Vector3(1, 0.00001, 0.00001)
     acc.normalize()
 
@@ -165,7 +180,13 @@ export function GyroscopePage() {
           <LineGraph data={graphData}></LineGraph>
           <LineGraph title="wavelet" data={wtMap}></LineGraph>
 
-          <LineGraph title="wavelet slice" data={wtMap.slice(wtMap.length - 20 - 1, wtMap.length - 1)}></LineGraph>
+          {wtMap.slice(0, wtMap.length - (wtMap.length / 2)).length}
+          <LineGraph title="wavelet slice" data={wtMap.slice(0, wtMap.length - (wtMap.length / 2))}></LineGraph>
+          <LineGraph title="wavelet slice" data={fftData.map(x => {
+            return { x: 0, y: 0, z: x.re }
+          })}></LineGraph>
+
+
         </>
       )}
     </div>

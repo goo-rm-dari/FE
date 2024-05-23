@@ -81,9 +81,6 @@ export function MapPage() {
         return kg * distance / 1000
     }
 
-    const getDuration = () => {
-        return new Date().getTime() - startTime.getTime()
-    }
 
 
     const startTimer = () => {
@@ -161,6 +158,7 @@ export function MapPage() {
 
 
     useEffect(() => {
+        console.log(savedDuration)
         getFirstLocation()
         startTimer()
 

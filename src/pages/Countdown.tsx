@@ -13,10 +13,11 @@ export function CountdownPage() {
     }, [count])
 
     useEffect(() => {
+        setStartTime(new Date())
         setInterval(() => {
             const mls = startTime.getTime() - new Date().getTime()
             console.log(mls)
-            setCount((cnt) => 3 - Math.round(Math.abs(mls / 1000)))
+            setCount(() => 3 - Math.round(Math.abs(mls / 1000)))
         }, 980)
     }, [])
 
