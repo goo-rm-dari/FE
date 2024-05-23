@@ -1,4 +1,4 @@
-import MapPage from './pages/Map';
+import { MapPage } from './pages/Map';
 
 function App() {
   return <MapPage />;

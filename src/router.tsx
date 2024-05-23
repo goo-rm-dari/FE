@@ -8,6 +8,7 @@ import { DonePage } from './pages/Done';
 import Main from './pages/Main';
 import LoginPage from './pages/login';
 import SignInPage from './pages/signIn';
+import { CheckTrashPage } from './pages/CheckTrash';
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +24,14 @@ export const router = createBrowserRouter([
     element: (
       <DynamicRouter>
         <DonePage />
+      </DynamicRouter>
+    ),
+  },
+  {
+    path: '/plogging/check',
+    element: (
+      <DynamicRouter>
+        <CheckTrashPage />
       </DynamicRouter>
     ),
   },
