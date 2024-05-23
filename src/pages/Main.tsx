@@ -13,30 +13,7 @@ const Main = () => {
     long: number;
   }>({ lat: 0, long: 0 });
   const [DummyData, setDummyData] = useState([
-    {
-      id: 1,
-      date: '2021.01.01 (목)',
-      trash: 3,
-      runTime: '28:12',
-      kcal: 133.6,
-      distance: 1.43,
-    },
-    {
-      id: 2,
-      date: '2021.01.02 (금)',
-      trash: 4,
-      runTime: '30:12',
-      kcal: 143.6,
-      distance: 1.53,
-    },
-    {
-      id: 3,
-      date: '2021.01.03 (토)',
-      trash: 5,
-      runTime: '31:12',
-      kcal: 153.6,
-      distance: 1.63,
-    },
+
   ])
 
   const [address, setAddress] = useState<string>('서귀포시 성산읍');
@@ -54,7 +31,7 @@ const Main = () => {
       console.log(result)
 
       if (result.length > 0) {
-        setDummyData([])
+        setDummyData(() => [])
       }
 
       for (let index = 0; index < result.length; index++) {
