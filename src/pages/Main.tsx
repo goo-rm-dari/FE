@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import { useNavigate } from 'react-router-dom';
+
 import Icon from '../components/Icon/icon';
 import { geolocation } from '../utils/getLocation';
 
@@ -37,7 +39,7 @@ const Main = () => {
   }>({ lat: 0, long: 0 });
   const [address, setAddress] = useState<string>('서귀포시 성산읍');
   const [loading, setLoading] = useState<boolean>(true);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchGeolocation = async () => {
       try {
@@ -80,8 +82,12 @@ const Main = () => {
     );
   }
 
+  const handleMoveToPlogging = () => {
+    navigate('/plogging');
+  };
+
   return (
-    <div className='flex flex-col gap-5 p-6 pt-[60px]'>
+    <div className='relative flex grow flex-col gap-5 p-6 pt-[60px]'>
       <span className='text-[30px]'>{address}</span>
       <span className='text-gray-500'>최근 플로깅</span>
       <div className='flex flex-col gap-6'>
@@ -107,6 +113,12 @@ const Main = () => {
           </div>
         ))}
       </div>
+      <button
+        onClick={handleMoveToPlogging}
+        className='mx-auto mt-40 h-[111px] w-[111px] w-fit rounded-full bg-gray-200 p-4'
+      >
+        플로깅 시작
+      </button>
     </div>
   );
 };
