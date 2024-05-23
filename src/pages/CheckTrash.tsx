@@ -2,12 +2,14 @@
 import { useState, useEffect, useRef } from "react";
 import * as mobilenet from '@tensorflow-models/mobilenet';
 import '@tensorflow/tfjs-backend-webgl';
+import { Title } from "../components/Title";
 
 
-function Main({ close }: any) {
+function Main({ close, addTrash }: any) {
     const [predictAccuracy, setAccuracy] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [isUpload, setIsUpload] = useState(false)
+    const [resultMsg, setResultMsg] = useState("")
 
     const imageRef: any = useRef()
 
@@ -73,17 +75,39 @@ function Main({ close }: any) {
         if (!!predictAccuracy) {
             setIsLoading(false)
 
-            setTimeout(() => {
-                close()
-                if (isUpload) {
+            const allow = ["packet", "water", "bottle", "bowl", "cup", "bucket"]
+            let isAllow = false
+            for (let index = 0; index < predictAccuracy.length; index++) {
+                const element = predictAccuracy[index];
+                for (let indexAllow = 0; indexAllow < allow.length; indexAllow++) {
+                    const elementAllow = allow[indexAllow];
 
-                    setAccuracy([])
-                    setIsUpload(false)
-                    const context = canvasRef.current.getContext('2d');
-                    context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+                    if (element.className.includes(elementAllow)) {
+                        isAllow = true;
+                        break
+                    }
                 }
+            }
 
-            }, 3000)
+            if (isAllow) {
+                setResultMsg("쓰레기 인증에 성공했습니다.")
+
+                setTimeout(() => {
+                    close()
+                    if (isUpload) {
+                        addTrash()
+                        setAccuracy([])
+                        setIsUpload(false)
+                        const context = canvasRef.current.getContext('2d');
+                        context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+                    }
+
+                }, 3000)
+            } else {
+                setResultMsg("쓰레기가 아닙니다.")
+            }
+
+
         }
     }, [predictAccuracy])
 
@@ -115,6 +139,11 @@ function Main({ close }: any) {
                 ref={imageRef}
                 width="224"
             ></img>
+            {!isLoading && (
+                <div className="p-6">
+                    <Title>{resultMsg}</Title>
+                </div>
+            )}
             {isLoading ? (
                 <div className="flex justify-center items-center">
                     <span className="material-symbols-outlined animate-spin ">
@@ -198,7 +227,7 @@ function FileUpload({ canvas, image, predict }: any) {
 }
 
 
-export function CheckTrashPage({ close }: any) {
+export function CheckTrashPage({ close, addTrash }: any) {
     return (
         <div className="w-full">
             <span className="material-symbols-outlined p-4" onClick={close}>
@@ -206,7 +235,7 @@ export function CheckTrashPage({ close }: any) {
             </span>
             <h2 className="text-2xl p-4">쓰레기 사진을 찍어 인증해 주세요</h2>
 
-            <Main close={close}></Main>
+            <Main close={close} addTrash={addTrash}></Main>
         </div>
     )
 }
