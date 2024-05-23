@@ -156,6 +156,7 @@ function MapPage() {
       distance: (distance / 1000).toFixed(2),
       kcal: kcal,
     };
+    console.log(createPloggingForm);
     navigate('/plogging/done');
   };
 
