@@ -1,173 +1,167 @@
-import { useEffect, useState } from "react";
-import { getGyroLocation } from "../math/getGyroLocation";
-import { LineGraph } from "../components/Graph";
-import * as THREE from 'three';
-import wt from 'discrete-wavelets';
+// import { useEffect, useState } from "react";
+// import { getGyroLocation } from "../math/getGyroLocation";
+// import { LineGraph } from "../components/Graph";
+// import * as THREE from 'three';
+// import wt from 'discrete-wavelets';
 
-export function GyroscopePage() {
-  const [acceleration, setAcceleration] = useState({
-    x: 0,
-    y: 0,
-    z: 0,
-  });
-  const [graphData, setGraphData] = useState<
-    { x: number; y: number; z: number }[]
-  >([]);
-  const [velocity, setVelocity] = useState({
-    x: 0,
-    y: 0,
-    z: 0,
-  });
-  const [location, setLocation] = useState({
-    x: 0,
-    y: 0,
-    z: 0,
-  });
+// export function GyroscopePage() {
+//   const [acceleration, setAcceleration] = useState({
+//     x: 0,
+//     y: 0,
+//     z: 0,
+//   });
+//   const [graphData, setGraphData] = useState<
+//     { x: number; y: number; z: number }[]
+//   >([]);
+//   const [velocity, setVelocity] = useState({
+//     x: 0,
+//     y: 0,
+//     z: 0,
+//   });
+//   const [location, setLocation] = useState({
+//     x: 0,
+//     y: 0,
+//     z: 0,
+//   });
 
-  const [rotation, setRotation] = useState({
-    x: 0,
-    y: 0,
-    z: 0,
-  });
-  const [isGranted, setIsGranted] = useState(false);
-  const [data, setData] = useState(new getGyroLocation());
-  const [wtData, setWtData] = useState<number[][]>([[]]);
+//   const [rotation, setRotation] = useState({
+//     x: 0,
+//     y: 0,
+//     z: 0,
+//   });
+//   const [isGranted, setIsGranted] = useState(false);
+//   const [data, setData] = useState(new getGyroLocation());
+//   const [wtData, setWtData] = useState<number[][]>([[]]);
 
-  const onDevicemotion = (event: any) => {
-    setAcceleration({
-      x: event.acceleration.x,
-      y: event.acceleration.y,
-      z: event.acceleration.z,
-    });
-  };
-  const onDeviceRotation = (event: any) => {
-    setRotation({
-      x: event.alpha,
-      y: event.beta,
-      z: event.gamma,
-    });
-  };
+//   const onDevicemotion = (event: any) => {
+//     setAcceleration({
+//       x: event.acceleration.x,
+//       y: event.acceleration.y,
+//       z: event.acceleration.z,
+//     });
+//   };
+//   const onDeviceRotation = (event: any) => {
+//     setRotation({
+//       x: event.alpha,
+//       y: event.beta,
+//       z: event.gamma,
+//     });
+//   };
 
-  const handleButtonClick = () => {
-    const DeviceOrientationEvent: any = window.DeviceOrientationEvent;
-    const DeviceMotionEvent: any = window.DeviceMotionEvent;
-    const isSafariOver13 =
-      window.DeviceOrientationEvent !== undefined &&
-      typeof DeviceOrientationEvent.requestPermission === "function";
+//   const handleButtonClick = () => {
+//     const DeviceOrientationEvent: any = window.DeviceOrientationEvent;
+//     const DeviceMotionEvent: any = window.DeviceMotionEvent;
+//     const isSafariOver13 =
+//       window.DeviceOrientationEvent !== undefined &&
+//       typeof DeviceOrientationEvent.requestPermission === "function";
 
-    if (isSafariOver13) {
-      DeviceMotionEvent.requestPermission()
-        .then((state: any) => {
-          if (state === "granted") {
-            setIsGranted(true);
-            window.addEventListener("devicemotion", onDevicemotion);
-            window.addEventListener("deviceorientation", onDeviceRotation);
-          }
-        })
-        .catch((e: any) => {
-          console.error(e);
-        });
-    } else {
-      window.addEventListener("devicemotion", onDevicemotion);
-    }
-  };
+//     if (isSafariOver13) {
+//       DeviceMotionEvent.requestPermission()
+//         .then((state: any) => {
+//           if (state === "granted") {
+//             setIsGranted(true);
+//             window.addEventListener("devicemotion", onDevicemotion);
+//             window.addEventListener("deviceorientation", onDeviceRotation);
+//           }
+//         })
+//         .catch((e: any) => {
+//           console.error(e);
+//         });
+//     } else {
+//       window.addEventListener("devicemotion", onDevicemotion);
+//     }
+//   };
 
+//   useEffect(() => {
 
-  useEffect(() => {
+//     data.setAcceleration({
+//       x: acceleration.x,
+//       y: acceleration.y,
+//       z: acceleration.z,
+//     });
 
-    data.setAcceleration({
-      x: acceleration.x,
-      y: acceleration.y,
-      z: acceleration.z,
-    });
+//     data.getLocation();
 
+//     setVelocity({
+//       x: data.velocity.x,
+//       y: data.velocity.y,
+//       z: data.velocity.z,
+//     });
 
-    data.getLocation();
+//     setLocation({
+//       x: data.location.x,
+//       y: data.location.y,
+//       z: data.location.z,
+//     });
 
-    setVelocity({
-      x: data.velocity.x,
-      y: data.velocity.y,
-      z: data.velocity.z,
-    });
+//     const acc = new THREE.Vector3(acceleration.x, acceleration.y, acceleration.z)
 
-    setLocation({
-      x: data.location.x,
-      y: data.location.y,
-      z: data.location.z,
-    });
+//     console.log(acc)
 
+//     // const qt = new THREE.Quaternion(rotation.x * Math.PI / 180, rotation.y * Math.PI / 180, rotation.z * Math.PI / 180, 0)
+//     // qt.normalize()
 
-    const acc = new THREE.Vector3(acceleration.x, acceleration.y, acceleration.z)
+//     // acc.applyQuaternion(qt)
+//     // console.log(acc)
 
-    console.log(acc)
+//     const x = acc.x
+//     const y = acc.y
+//     const z = acc.z
 
-    // const qt = new THREE.Quaternion(rotation.x * Math.PI / 180, rotation.y * Math.PI / 180, rotation.z * Math.PI / 180, 0)
-    // qt.normalize()
+//     graphData.push({ x: x, y: y, z: z });
 
-    // acc.applyQuaternion(qt)
-    // console.log(acc)
+//     if (graphData.length > 2 ** 6) {
+//       graphData.splice(0, 1);
 
-    const x = acc.x
-    const y = acc.y
-    const z = acc.z
+//       let coeffs = wt.dwt(graphData.map(it => {
+//         return it.z
+//       }), 'haar');
+//       setWtData(coeffs)
 
+//     }
 
-    graphData.push({ x: x, y: y, z: z });
+//     setGraphData([...graphData]);
 
+//   }, [acceleration]);
 
+//   useEffect(() => {
+//     const range = 20
+//     const getRange = wtData.slice(wtData.length - range - 1, wtData.length - 1)
+//   }, [wtData])
 
-    if (graphData.length > 2 ** 6) {
-      graphData.splice(0, 1);
+//   useEffect(() => {
+//     const acc = new THREE.Vector3(1, 0.00001, 0.00001)
+//     acc.normalize()
 
-      let coeffs = wt.dwt(graphData.map(it => {
-        return it.z
-      }), 'haar');
-      setWtData(coeffs)
+//     console.log(acc)
 
-    }
+//     const qt = new THREE.Quaternion(180 * Math.PI / 180, 0, 90 * Math.PI / 180, 0)
+//     qt.normalize()
 
-    setGraphData([...graphData]);
+//     acc.applyQuaternion(qt)
+//     acc.normalize()
+//     console.log(acc)
+//   }, [])
 
-  }, [acceleration]);
+//   const wtMap = wtData.reduce(function (prev, next) {
+//     return prev.concat(next);
+//   }).map(it => {
+//     return { x: 0, y: 0, z: it }
+//   })
 
-  useEffect(() => {
-    const range = 20
-    const getRange = wtData.slice(wtData.length - range - 1, wtData.length - 1)
-  }, [wtData])
+//   return (
+//     <div>
+//       <button onClick={handleButtonClick}>enable</button>
+//       {isGranted && (
+//         <>
+//           {Math.round(rotation.x)},{Math.round(rotation.y)},{Math.round(rotation.z)}
+//           {JSON.stringify(wtData)}
+//           <LineGraph data={graphData}></LineGraph>
+//           <LineGraph title="wavelet" data={wtMap}></LineGraph>
 
-  useEffect(() => {
-    const acc = new THREE.Vector3(1, 0.00001, 0.00001)
-    acc.normalize()
-
-    console.log(acc)
-
-    const qt = new THREE.Quaternion(180 * Math.PI / 180, 0, 90 * Math.PI / 180, 0)
-    qt.normalize()
-
-    acc.applyQuaternion(qt)
-    acc.normalize()
-    console.log(acc)
-  }, [])
-
-  const wtMap = wtData.reduce(function (prev, next) {
-    return prev.concat(next);
-  }).map(it => {
-    return { x: 0, y: 0, z: it }
-  })
-
-  return (
-    <div>
-      <button onClick={handleButtonClick}>enable</button>
-      {isGranted && (
-        <>
-          {Math.round(rotation.x)},{Math.round(rotation.y)},{Math.round(rotation.z)}
-          {JSON.stringify(wtData)}
-          <LineGraph data={graphData}></LineGraph>
-          <LineGraph title="wavelet" data={wtMap}></LineGraph>
-
-          <LineGraph title="wavelet slice" data={wtMap.slice(wtMap.length - 20 - 1, wtMap.length - 1)}></LineGraph>
-        </>
-      )}
-    </div>
-  )
-}
+//           <LineGraph title="wavelet slice" data={wtMap.slice(wtMap.length - 20 - 1, wtMap.length - 1)}></LineGraph>
+//         </>
+//       )}
+//     </div>
+//   )
+// }
