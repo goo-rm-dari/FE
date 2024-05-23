@@ -3,6 +3,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Title } from '../components/Title';
+import { cn } from '../utils/cn';
 
 const SignInPage = () => {
   const [height, setHeight] = useState<string>('');
@@ -46,39 +47,36 @@ const SignInPage = () => {
   };
 
   return (
-    <div className='flex h-full flex-col pt-[88px]'>
+    <div className='flex h-full flex-col'>
       <form onSubmit={handleSubmit}>
         <div className='flex h-full flex-col gap-8 p-6 pt-10'>
           <Title>기본 정보를 입력해 주세요.</Title>
-          <div style={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
+          <div className='flex items-center gap-4'>
             <div className='relative flex w-full items-center'>
               <input
-                className='w-full rounded-lg border p-3'
-                style={{ border: '0.1rem solid #E0E0E0' }}
+                className='w-full rounded-[8px] rounded-lg border border border-[#E0E0E0] px-4 py-3'
                 value={height}
                 onChange={handleOnHeightChange}
                 placeholder='키'
                 type='text'
               />
-              <span className='absolute right-[10px]'>
+              <span className='absolute right-[100px]'>
                 {height ? 'cm' : ''}
               </span>
             </div>
             <div className='relative flex w-full items-center'>
               <input
-                className='w-full rounded-lg border p-3'
-                style={{ border: '0.1rem solid #E0E0E0' }}
+                className='w-full rounded-[8px] rounded-lg border border border-[#E0E0E0] px-4 py-3'
                 value={weight}
                 onChange={handleOnWeightChange}
                 placeholder='체중'
                 type='text'
               />
-              <span className='absolute right-[10px]'>
+              <span className='absolute right-[100px]'>
                 {weight ? 'kg' : ''}
               </span>
             </div>
           </div>
-
           <select
             className='w-full rounded-lg border p-3'
             style={{ border: '0.1rem solid #E0E0E0' }}
@@ -92,7 +90,13 @@ const SignInPage = () => {
           <div className='w-full grow p-10'></div>
         </div>
         <div className='absolute bottom-2 flex w-full items-center justify-center p-6'>
-          <button className='w-full rounded-md bg-[#7FD6E1] bg-gray-400 p-3 text-gray-50'>
+          <button
+            className={cn('w-full rounded-md p-3 text-[#FFFFFF]', {
+              'cursor-not-allowed bg-[#C1C1C1]': !height || !weight,
+              'bg-[#7FD6E1]': height && weight,
+            })}
+            disabled={!height || !weight}
+          >
             완료
           </button>
         </div>
