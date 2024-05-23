@@ -4,15 +4,21 @@ import * as mobilenet from '@tensorflow-models/mobilenet';
 import '@tensorflow/tfjs-backend-webgl';
 
 
-function Main() {
+function Main({ close }: any) {
     const [predictAccuracy, setAccuracy] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
+    const [isUpload, setIsUpload] = useState(false)
+
     const imageRef: any = useRef()
 
-    useEffect(() => {
-        predict()
-    }, [])
+    // useEffect(() => {
+    //     predict()
+    // }, [])
+
 
     const predict = async () => {
+        setIsLoading(true)
+        setIsUpload(true)
         const img: any = imageRef.current
         const model = await mobilenet.load();
         const predictions: any = await model.classify(img);
@@ -63,6 +69,24 @@ function Main() {
         //startWebcam();
     }, []);
 
+    useEffect(() => {
+        if (!!predictAccuracy) {
+            setIsLoading(false)
+
+            setTimeout(() => {
+                close()
+                if (isUpload) {
+
+                    setAccuracy([])
+                    setIsUpload(false)
+                    const context = canvasRef.current.getContext('2d');
+                    context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+                }
+
+            }, 3000)
+        }
+    }, [predictAccuracy])
+
 
 
     // const handleClickTakePicture = () => {
@@ -79,6 +103,8 @@ function Main() {
 
             </div>
 
+
+
             <div className="absolute p-6 bottom-2 w-full justify-center flex">
                 <FileUpload canvas={canvasRef} image={imageRef} predict={predict}></FileUpload>
             </div>
@@ -89,7 +115,20 @@ function Main() {
                 ref={imageRef}
                 width="224"
             ></img>
-            {predictionsMap}
+            {isLoading ? (
+                <div className="flex justify-center items-center">
+                    <span className="material-symbols-outlined animate-spin ">
+                        progress_activity
+                    </span>
+                </div>
+
+            ) : (
+                <>
+                    {predictionsMap}
+                </>
+
+            )}
+
         </header>
     );
 }
@@ -159,15 +198,15 @@ function FileUpload({ canvas, image, predict }: any) {
 }
 
 
-export function CheckTrashPage() {
+export function CheckTrashPage({ close }: any) {
     return (
-        <div className="">
+        <div className="w-full">
+            <span className="material-symbols-outlined p-4" onClick={close}>
+                arrow_back_ios
+            </span>
             <h2 className="text-2xl p-4">쓰레기 사진을 찍어 인증해 주세요</h2>
-            <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
-            <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
-            <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
-            <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/handpose"></script>
-            <Main></Main>
+
+            <Main close={close}></Main>
         </div>
     )
 }
