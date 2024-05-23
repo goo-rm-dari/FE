@@ -1,11 +1,11 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import App from './App';
 import DynamicRouter from './components/DynamicRouter';
 // import { CountdownPage } from './pages/Countdown';
 import { DonePage } from './pages/Done';
 // import { GyroscopePage } from './pages/Gyroscope';
 import Main from './pages/Main';
+import MapPage from './pages/MapPage';
 import LoginPage from './pages/login';
 import SignInPage from './pages/signIn';
 import { CheckTrashPage } from './pages/CheckTrash';
@@ -15,7 +15,7 @@ export const router = createBrowserRouter([
     path: '/plogging',
     element: (
       <DynamicRouter>
-        <App />
+        <MapPage />
       </DynamicRouter>
     ),
   },
