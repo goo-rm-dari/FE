@@ -4,6 +4,7 @@ import App from './App';
 import { GyroscopePage } from './pages/Gyroscope';
 import LoginPage from './pages/login';
 import SignInPage from './pages/signIn';
+import { CountdownPage } from './pages/Countdown';
 
 export const router = createBrowserRouter([
   {
@@ -13,6 +14,10 @@ export const router = createBrowserRouter([
   {
     path: '/test',
     element: <GyroscopePage />,
+  },
+  {
+    path: '/load',
+    element: <CountdownPage />,
   },
   {
     path: '/login',
