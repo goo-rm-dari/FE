@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { Line } from "react-chartjs-2";
+import { useEffect, useState } from 'react';
 
 import {
-  Chart as ChartJS,
   CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LineElement,
   LinearScale,
   PointElement,
-  LineElement,
   Title,
   Tooltip,
-  Legend,
-} from "chart.js";
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
 
 ChartJS.register(
   CategoryScale,
@@ -19,12 +19,12 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 function LineGraph({
   data,
-  title = "",
+  title = '',
 }: {
   data: { x: number; y: number; z: number }[];
   title?: string;
@@ -36,7 +36,7 @@ function LineGraph({
     },
     plugins: {
       legend: {
-        position: "top" as const,
+        position: 'top' as const,
       },
       title: {
         display: true,
@@ -46,50 +46,50 @@ function LineGraph({
   };
 
   const [graphData, setGraphData] = useState({
-    labels: data.map(() => ""),
+    labels: data.map(() => ''),
     datasets: [
       {
-        label: "X",
-        data: data.map((item) => item.x),
-        borderColor: "#2e82ff",
-        backgroundColor: "#2e82ff",
+        label: 'X',
+        data: data.map(item => item.x),
+        borderColor: '#2e82ff',
+        backgroundColor: '#2e82ff',
       },
       {
-        label: "Y",
-        data: data.map((item) => item.y),
-        borderColor: "#ff462e",
-        backgroundColor: "#ff462e",
+        label: 'Y',
+        data: data.map(item => item.y),
+        borderColor: '#ff462e',
+        backgroundColor: '#ff462e',
       },
       {
-        label: "Z",
-        data: data.map((item) => item.z),
-        borderColor: "#54ff2e",
-        backgroundColor: "#54ff2e",
+        label: 'Z',
+        data: data.map(item => item.z),
+        borderColor: '#54ff2e',
+        backgroundColor: '#54ff2e',
       },
     ],
   });
 
   useEffect(() => {
     setGraphData({
-      labels: data.map(() => ""),
+      labels: data.map(() => ''),
       datasets: [
         {
-          label: "X",
-          data: data.map((item) => item.x),
-          borderColor: "#2e82ff",
-          backgroundColor: "#2e82ff",
+          label: 'X',
+          data: data.map(item => item.x),
+          borderColor: '#2e82ff',
+          backgroundColor: '#2e82ff',
         },
         {
-          label: "Y",
-          data: data.map((item) => item.y),
-          borderColor: "#ff462e",
-          backgroundColor: "#ff462e",
+          label: 'Y',
+          data: data.map(item => item.y),
+          borderColor: '#ff462e',
+          backgroundColor: '#ff462e',
         },
         {
-          label: "Z",
-          data: data.map((item) => item.z),
-          borderColor: "#54ff2e",
-          backgroundColor: "#54ff2e",
+          label: 'Z',
+          data: data.map(item => item.z),
+          borderColor: '#54ff2e',
+          backgroundColor: '#54ff2e',
         },
       ],
     });
