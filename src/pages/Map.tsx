@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Map, MapMarker, Polyline } from "react-kakao-maps-sdk"
 import { geolocation } from "../utils/getLocation"
 import { Button } from "../components/Button"
@@ -19,6 +19,8 @@ export function MapPage() {
         lat: 126.79581,
     }])
 
+    const [trashLocationList, setTrashLocationList] = useState<any>([])
+
     const [moveLine, setMoveLine] = useState<any>()
 
     const [trashCount, setTrashCount] = useState(0)
@@ -26,10 +28,14 @@ export function MapPage() {
     const [kcal, setKcal] = useState(0)
 
     const [startTime, setStartTime] = useState(new Date())
-    const [duration, setDuration] = useState("")
+    const [savedDuration, setSavedDuration] = useState(0)
+    const [duration, setDuration] = useState(0)
+    const [isClock, setIsClock] = useState(true)
+    const timeRef = useRef<any>(null)
 
     const interval = 2000
     const markerImage = "/marker.png"
+    const trashMarkerImage = "/trash.jpeg"
 
     const imageShowSize = 30
     const imageSize = { width: imageShowSize, height: imageShowSize }
@@ -58,25 +64,58 @@ export function MapPage() {
         return Math.round(moveLine.getLength())
     }
 
+    const addTrash = async () => {
+        const getLocation = await geolocation.get()
+        setTrashLocationList([...trashLocationList, {
+            long: getLocation?.long,
+            lat: getLocation?.lat
+        }])
+    }
+
+
     const calculateKcal = () => {
         const kg = 70
         return kg * distance / 1000
     }
 
     const getDuration = () => {
-        const milliseconds = new Date().getTime() - startTime.getTime()
-
-        const minutes = Math.floor(milliseconds / 60000);
-        const seconds = ((milliseconds % 60000) / 1000).toFixed(0);
-        return minutes + ":" + (milliseconds < 10 ? '0' : '') + seconds;
+        return new Date().getTime() - startTime.getTime()
     }
 
     const handleClickTrash = () => {
         setTrashCount((trash) => trash + 1)
+        addTrash()
     }
 
     const handleClickStopPlogging = () => {
-        setTrashCount((trash) => trash + 1)
+        //setTrashCount((trash) => trash + 1)
+    }
+
+    const handleClickStopClock = () => {
+        setStartTime(() => new Date())
+        setSavedDuration((saved) => saved + (new Date().getTime() - startTime.getTime()))
+        setIsClock(false)
+        stopTimer()
+    }
+
+    const handleClickStartClock = () => {
+        setStartTime(() => new Date())
+        setIsClock(true)
+        startTimer()
+    }
+
+    const startTimer = () => {
+        setStartTime(() => new Date())
+        setSavedDuration(0)
+
+        timeRef.current = setInterval(() => {
+            setDuration((time) => time + 1000)
+            console.log("AAAA")
+        }, 1000)
+    }
+
+    const stopTimer = () => {
+        clearInterval(timeRef.current)
     }
 
     useEffect(() => {
@@ -91,18 +130,17 @@ export function MapPage() {
         } catch (error) { }
     }, [nowLocation])
 
+
     useEffect(() => {
         getFirstLocation()
+        startTimer()
 
         setInterval(() => {
             getGeoLocation()
 
         }, interval)
 
-        setInterval(() => {
-            setDuration(getDuration())
-
-        }, 1000)
+        return () => stopTimer()
     }, [])
 
     return (
@@ -126,7 +164,7 @@ export function MapPage() {
                     onCreate={setMoveLine}
 
                 />
-                {/* <MapMarker position={{ lat: nowLocation.lat, lng: nowLocation.long }}></MapMarker> */}
+
                 <MapMarker
                     position={{ lat: nowLocation.lat, lng: nowLocation.long }} image={{
                         src: markerImage,
@@ -137,6 +175,22 @@ export function MapPage() {
                         },
                     }}
                 />
+
+                {trashLocationList.map((trash: any) => (
+                    <MapMarker
+                        position={{ lat: trash.lat, lng: trash.long }}
+                        image={{
+                            src: trashMarkerImage,
+                            size: imageSize,
+                            options: {
+                                spriteSize: spriteSize,
+                                spriteOrigin: storeOrigin,
+                            },
+                        }}
+                    />
+                ))}
+
+
             </Map>
 
             <b className="absolute top-2 left-2 z-10">{trashCount}개의 쓰레기</b>
@@ -149,7 +203,7 @@ export function MapPage() {
 
                     </div>
                     <div className="flex justify-center flex-1">
-                        <b>{duration}</b>
+                        <b>{Math.floor(duration / 60000) + ":" + (duration < 10 ? '0' : '') + ((duration % 60000) / 1000).toFixed(0)}</b>
 
                     </div>
                     <div className="flex justify-center flex-1">
@@ -163,6 +217,13 @@ export function MapPage() {
 
                     </div>
                     <div className="flex justify-center flex-1">
+                        {isClock ? (
+                            <Button onClick={handleClickStopClock}>시간 중단</Button>
+
+                        ) : (
+                            <Button onClick={handleClickStartClock}>시간 재개</Button>
+
+                        )}
 
                     </div>
                     <div className="flex justify-center flex-1">
