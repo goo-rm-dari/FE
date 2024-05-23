@@ -69,7 +69,7 @@ function MapPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const interval = 3000;
   const markerImage = '/marker.png';
-  const trashMarkerImage = '/trash.jpeg';
+  const trashMarkerImage = '/trash.png';
 
   const imageShowSize = 30;
   const imageSize = { width: imageShowSize, height: imageShowSize };
@@ -158,8 +158,8 @@ function MapPage() {
   };
 
   const calculateKcal = () => {
-    const kg = 70;
-    return (kg * distance) / 1000;
+    const kg = parseInt(JSON.parse(localStorage.getItem('userInfo')).weight);
+    return ((kg * distance) / 1000) + (trashCount * 3);
   };
 
   const startTimer = () => {
@@ -316,7 +316,7 @@ function MapPage() {
             <p style={{ color: '#828282' }}>시간</p>
           </div>
           <div className='flex flex-1 flex-col items-center justify-center gap-2'>
-            <b style={{ fontSize: '1.5rem' }}>{kcal}kcal</b>
+            <b style={{ fontSize: '1.5rem' }}>{Math.round(kcal)}kcal</b>
             <p>칼로리</p>
           </div>
 
