@@ -25,7 +25,7 @@ const Main = () => {
     try {
       const userId = localStorage.getItem('userId');
 
-      const response = await axios.get(`https://kade3b2277062a.user-app.krampoline.com/api/plogging-records/${userId}`)
+      const response = await axios.get(`https://k62968f39024da.user-app.krampoline.com/api/plogging-records/all/${userId}`)
       const result = response.data.data.info;
 
       console.log(result)

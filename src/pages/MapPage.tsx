@@ -118,7 +118,7 @@ function MapPage() {
     try {
       const userId = localStorage.getItem('userId');
 
-      const response = await axios.post(`https://kade3b2277062a.user-app.krampoline.com/api/plogging-records`, {
+      const response = await axios.post(`https://k62968f39024da.user-app.krampoline.com/api/plogging-records`, {
         "memberId": userId,
         "movingCoordinates": form.locationList.map((item) => {
           return {
