@@ -2,7 +2,6 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { PrimaryButton } from '../components/Button';
 import { Title } from '../components/Title';
 
 const SignInPage = () => {
