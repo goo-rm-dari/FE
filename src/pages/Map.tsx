@@ -2,8 +2,10 @@ import { useEffect, useRef, useState } from "react"
 import { Map, MapMarker, Polyline } from "react-kakao-maps-sdk"
 import { geolocation } from "../utils/getLocation"
 import { Button } from "../components/Button"
+import { useNavigate } from "react-router-dom"
 
 export function MapPage() {
+    const navigate = useNavigate()
 
     const [firstLocation, setFirstLocation] = useState({
         long: 33.5563,
@@ -125,7 +127,7 @@ export function MapPage() {
     }
 
     const handleClickStopPlogging = () => {
-        //setTrashCount((trash) => trash + 1)
+        navigate('/plogging/done')
     }
 
     const handleClickStopClock = () => {

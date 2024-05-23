@@ -7,6 +7,7 @@ import { GyroscopePage } from './pages/Gyroscope';
 import Main from './pages/Main';
 import LoginPage from './pages/login';
 import SignInPage from './pages/signIn';
+import { DonePage } from './pages/Done';
 
 export const router = createBrowserRouter([
   {
@@ -14,6 +15,14 @@ export const router = createBrowserRouter([
     element: (
       <DynamicRouter>
         <App />
+      </DynamicRouter>
+    ),
+  },
+  {
+    path: '/plogging/done',
+    element: (
+      <DynamicRouter>
+        <DonePage />
       </DynamicRouter>
     ),
   },
