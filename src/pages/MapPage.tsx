@@ -29,7 +29,7 @@ function ImageCheckModal({ isOpen = false, children, close }: any) {
 
 function MapPage() {
   const navigate = useNavigate();
-  const { done, get } = useDone()
+  const { done } = useDone()
 
 
   const [firstLocation, setFirstLocation] = useState<Location>({
@@ -54,10 +54,8 @@ function MapPage() {
   const [isClock, setIsClock] = useState(true);
   const timeRef = useRef<any>(null);
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
-
-
-  const interval = 3000;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const interval = 500;
   const markerImage = '/marker.png';
   const trashMarkerImage = '/trash.jpeg';
 
@@ -95,16 +93,7 @@ function MapPage() {
   const getGeoLocation = async () => {
     const getLocation = await geolocation.get();
     if (getLocation) {
-      if (
-        locationList.length === 0
-          ? true
-          : calculateDistance(
-            locationList[locationList.length - 1],
-            getLocation,
-          ) < 50
-      ) {
-        setNowLocation(getLocation);
-      }
+      setNowLocation(getLocation);
     }
   };
 
@@ -139,13 +128,13 @@ function MapPage() {
   };
 
   const closeModal = () => {
-    setIsModalOpen(false)
-  }
+    setIsModalOpen(false);
+  };
 
   const handleClickTrash = () => {
     setTrashCount(trash => trash + 1);
     addTrash();
-    setIsModalOpen(true)
+    setIsModalOpen(true);
   };
 
   const handleClickStopPlogging = () => {
@@ -158,8 +147,8 @@ function MapPage() {
       distance: (distance / 1000).toFixed(2),
       kcal: kcal,
     };
+    console.log(createPloggingForm);
     done(createPloggingForm)
-    console.log(createPloggingForm, get());
     navigate('/plogging/done');
   };
 
@@ -181,25 +170,29 @@ function MapPage() {
     startTimer();
     initializeLocation();
 
-    setInterval(() => {
+    const interval1 = setInterval(() => {
       getGeoLocation();
     }, interval);
 
     return () => {
       stopTimer();
+      clearInterval(interval1);
     };
   }, []);
 
   useEffect(() => {
     if (firstLocation.lat !== null && nowLocation.lat !== null) {
       if (
-        locationList.length > 0
+        (locationList.length > 0
           ? calculateDistance(
             locationList[locationList.length - 1],
             nowLocation,
-          ) < 50
-          : true
+          ) < 100
+          : true) &&
+        locationList[locationList.length - 1].lat !== nowLocation.lat &&
+        locationList[locationList.length - 1].long !== nowLocation.long
       ) {
+        console.log(1);
         setLocationList([...locationList, nowLocation]);
       }
 
