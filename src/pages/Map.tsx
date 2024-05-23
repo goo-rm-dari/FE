@@ -3,6 +3,7 @@ import { Map, MapMarker, Polyline } from "react-kakao-maps-sdk"
 import { geolocation } from "../utils/getLocation"
 import { Button } from "../components/Button"
 import { useNavigate } from "react-router-dom"
+import { TopShadow } from "../components/TopShadow"
 
 export function MapPage() {
     const navigate = useNavigate()
@@ -152,8 +153,6 @@ export function MapPage() {
             }])
         }
 
-
-
         try {
             setDistance(getGeoLocationLength())
             setKcal(calculateKcal())
@@ -187,8 +186,8 @@ export function MapPage() {
                             return { lat: item.lat, lng: item.long }
                         }),
                     ]}
-                    strokeWeight={5}
-                    strokeColor={"#FFAE00"}
+                    strokeWeight={10}
+                    strokeColor={"#7FD6E1"}
                     strokeOpacity={1}
                     strokeStyle={"solid"}
                     onCreate={setMoveLine}
@@ -225,7 +224,10 @@ export function MapPage() {
 
             <b className="absolute top-2 left-2 z-10">{trashCount}개의 쓰레기</b>
 
+
+
             <div className="relative bottom-0 left-0 w-full h-1/2 bg-white z-10">
+                <TopShadow />
 
                 <div className="flex pt-2">
                     <div className="flex justify-center flex-1">

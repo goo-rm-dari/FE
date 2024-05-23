@@ -119,7 +119,7 @@ export function GyroscopePage() {
     if (graphData.length > 2 ** 6) {
       graphData.splice(0, 1);
 
-      let coeffs = wt.wavedec(graphData.map(it => {
+      let coeffs = wt.dwt(graphData.map(it => {
         return it.z
       }), 'haar');
       setWtData(coeffs)
@@ -129,6 +129,11 @@ export function GyroscopePage() {
     setGraphData([...graphData]);
 
   }, [acceleration]);
+
+  useEffect(() => {
+    const range = 20
+    const getRange = wtData.slice(wtData.length - range - 1, wtData.length - 1)
+  }, [wtData])
 
   useEffect(() => {
     const acc = new THREE.Vector3(1, 0.00001, 0.00001)
@@ -142,11 +147,13 @@ export function GyroscopePage() {
     acc.applyQuaternion(qt)
     acc.normalize()
     console.log(acc)
-
-
-
-
   }, [])
+
+  const wtMap = wtData.reduce(function (prev, next) {
+    return prev.concat(next);
+  }).map(it => {
+    return { x: 0, y: 0, z: it }
+  })
 
   return (
     <div>
@@ -156,12 +163,9 @@ export function GyroscopePage() {
           {Math.round(rotation.x)},{Math.round(rotation.y)},{Math.round(rotation.z)}
           {JSON.stringify(wtData)}
           <LineGraph data={graphData}></LineGraph>
-          <LineGraph title="wavelet" data={wtData.reduce(function (prev, next) {
-            return prev.concat(next);
-          }).map(it => {
-            return { x: 0, y: 0, z: it }
-          })}></LineGraph>
+          <LineGraph title="wavelet" data={wtMap}></LineGraph>
 
+          <LineGraph title="wavelet slice" data={wtMap.slice(wtMap.length - 20 - 1, wtMap.length - 1)}></LineGraph>
         </>
       )}
     </div>
