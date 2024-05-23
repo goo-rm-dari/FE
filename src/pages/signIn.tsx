@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
+
 import { PrimaryButton } from '../components/Button';
 import { Title } from '../components/Title';
 
@@ -46,41 +47,42 @@ const SignInPage = () => {
   };
 
   return (
-    <div className='flex h-full flex-col'>
+    <div className='flex h-full flex-col pt-[88px]'>
       <form onSubmit={handleSubmit}>
-        <div className='flex h-full flex-col gap-6 p-6 pt-10'>
-          <Title>체중과 키를 입력하세요</Title>
-          <div className='w-full p-1'></div>
-
-          <div style={{ display: "flex", flexDirection: "row", gap: "1rem" }}>
+        <div className='flex h-full flex-col gap-8 p-6 pt-10'>
+          <Title>기본 정보를 입력해 주세요.</Title>
+          <div style={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
             <div className='relative flex w-full items-center'>
               <input
-                className='w-full border p-3 rounded-lg'
-                style={{ border: "0.1rem solid #E0E0E0" }}
+                className='w-full rounded-lg border p-3'
+                style={{ border: '0.1rem solid #E0E0E0' }}
                 value={height}
                 onChange={handleOnHeightChange}
                 placeholder='키'
                 type='text'
               />
-              <span className='absolute right-[10px]'>{height ? 'cm' : ''}</span>
+              <span className='absolute right-[10px]'>
+                {height ? 'cm' : ''}
+              </span>
             </div>
             <div className='relative flex w-full items-center'>
               <input
-                className='w-full border p-3 rounded-lg'
-                style={{ border: "0.1rem solid #E0E0E0" }}
+                className='w-full rounded-lg border p-3'
+                style={{ border: '0.1rem solid #E0E0E0' }}
                 value={weight}
                 onChange={handleOnWeightChange}
                 placeholder='체중'
                 type='text'
               />
-              <span className='absolute right-[10px]'>{weight ? 'kg' : ''}</span>
+              <span className='absolute right-[10px]'>
+                {weight ? 'kg' : ''}
+              </span>
             </div>
           </div>
 
-
           <select
-            className='w-full border p-3 rounded-lg'
-            style={{ border: "0.1rem solid #E0E0E0" }}
+            className='w-full rounded-lg border p-3'
+            style={{ border: '0.1rem solid #E0E0E0' }}
             onChange={e => setGender(e.target.value)}
             value={gender}
           >
@@ -89,14 +91,11 @@ const SignInPage = () => {
             <option value='woman'>여성</option>
           </select>
           <div className='w-full grow p-10'></div>
-
         </div>
-        <div className="absolute p-6 bottom-2 w-full justify-center flex items-center">
-          <PrimaryButton
-            type='submit'
-          >
+        <div className='absolute bottom-2 flex w-full items-center justify-center p-6'>
+          <button className='w-full rounded-md bg-[#7FD6E1] bg-gray-400 p-3 text-gray-50'>
             완료
-          </PrimaryButton>
+          </button>
         </div>
       </form>
     </div>
