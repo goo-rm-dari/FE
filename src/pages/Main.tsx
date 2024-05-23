@@ -91,7 +91,7 @@ const Main = () => {
   return (
     <div className='relative flex grow flex-col gap-5 p-4 pt-10'>
       <span className='flex items-center gap-1 px-6 text-[#828282]'>
-        <Icon id='map-icon' className='text-black' />
+        <Icon id='map-icon' className='text-[#C1C1C1]' />
         {address}
       </span>
       <div className='flex flex-col text-[24px]'>
@@ -103,7 +103,7 @@ const Main = () => {
         {DummyData.map((data, index) => (
           <div
             key={`${data.id} - ${index}`}
-            className='flex flex-col gap-4 rounded-md border bg-[#F8F8F8] p-4'
+            className='flex flex-col gap-4 rounded-[10px] border border-[#F8F8F8] bg-[#F8F8F8] p-4'
           >
             <div className='flex items-center justify-between p-4'>
               <span className='text-[#828282]'>{data.date}</span>
