@@ -1,1 +1,1 @@
-export type IconName = 'time' | 'leaf' | 'map-icon';
+export type IconName = 'time' | 'leaf' | 'map-icon' | 'baro';
