@@ -76,6 +76,7 @@ function Main({ close, addTrash }: any) {
             setIsLoading(false)
 
             const allow = ["packet", "water", "bottle", "bowl", "cup", "bucket"]
+
             let isAllow = false
             for (let index = 0; index < predictAccuracy.length; index++) {
                 const element = predictAccuracy[index];

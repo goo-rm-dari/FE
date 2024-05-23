@@ -19,7 +19,7 @@ interface Location {
   long: number | null;
 }
 
-function ImageCheckModal({ isOpen = false, children, close }: any) {
+function ImageCheckModal({ isOpen = false, children, close, addTrash }: any) {
   return (
     <div
       style={{
@@ -33,7 +33,7 @@ function ImageCheckModal({ isOpen = false, children, close }: any) {
         zIndex: 100,
       }}
     >
-      <CheckTrashPage close={close} />
+      <CheckTrashPage close={close} addTrash={addTrash} />
       {children}
     </div>
   );
@@ -85,9 +85,9 @@ function MapPage() {
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(coord1.lat * (Math.PI / 180)) *
-        Math.cos(coord2.lat * (Math.PI / 180)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      Math.cos(coord2.lat * (Math.PI / 180)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c * 1000; // Distance in meters
   };
@@ -113,6 +113,8 @@ function MapPage() {
   };
 
   const addTrash = async () => {
+    setTrashCount(trash => trash + 1);
+
     const getLocation = await geolocation.get();
     setTrashLocationList([
       ...trashLocationList,
@@ -143,8 +145,7 @@ function MapPage() {
   };
 
   const handleClickTrash = () => {
-    setTrashCount(trash => trash + 1);
-    addTrash();
+
     setIsModalOpen(true);
   };
 
@@ -196,9 +197,9 @@ function MapPage() {
       if (
         (locationList.length > 0
           ? calculateDistance(
-              locationList[locationList.length - 1],
-              nowLocation,
-            ) < 50
+            locationList[locationList.length - 1],
+            nowLocation,
+          ) < 50
           : true) &&
         locationList[locationList.length - 1].lat !== nowLocation.lat &&
         locationList[locationList.length - 1].long !== nowLocation.long
@@ -318,7 +319,7 @@ function MapPage() {
           </div>
         </div>
       </div>
-      <ImageCheckModal isOpen={isModalOpen} close={closeModal}>
+      <ImageCheckModal isOpen={isModalOpen} close={closeModal} addTrash={addTrash}>
         {/* <div>
             <CircleButton onClick={setIsModalOpen(() => !isModalOpen)}><span className="material-symbols-outlined">
               close
