@@ -18,6 +18,11 @@ export function MapPage() {
         lat: 126.79581,
     }])
 
+    const [moveLine, setMoveLine] = useState<any>()
+
+    const [trashCount, setTrashCount] = useState(0)
+    const [distance, setDistance] = useState(0)
+
     const interval = 2000
     const markerImage = "/marker.png"
 
@@ -38,18 +43,30 @@ export function MapPage() {
 
     const getGeoLocation = async () => {
         const getLocation = await geolocation.get()
-        console.log(getLocation)
         setNowLocation({
             long: getLocation?.long,
             lat: getLocation?.lat
         })
     }
 
+    const getGeoLocationLength = () => {
+        return Math.round(moveLine.getLength())
+    }
+
+    const handleClickTrash = () => {
+        setTrashCount((trash) => trash + 1)
+    }
+
+
     useEffect(() => {
         setLocationList([...locationList, {
             long: nowLocation.long,
             lat: nowLocation.lat
         }])
+
+        try {
+            setDistance(getGeoLocationLength())
+        } catch (error) { }
     }, [nowLocation])
 
     useEffect(() => {
@@ -78,6 +95,8 @@ export function MapPage() {
                     strokeColor={"#FFAE00"}
                     strokeOpacity={1}
                     strokeStyle={"solid"}
+                    onCreate={setMoveLine}
+
                 />
                 {/* <MapMarker position={{ lat: nowLocation.lat, lng: nowLocation.long }}></MapMarker> */}
                 <MapMarker
@@ -91,6 +110,9 @@ export function MapPage() {
                     }}
                 />
             </Map>
+
+            <button onClick={handleClickTrash} className="absolute bottom-0 left-0 w-full bg-indigo-500 rounded-sm p-4 text-white z-10">{trashCount}개의 쓰레기를 주움</button>
+            <div className="fixed top-1 left-1 z-20">{distance}m 이동</div>
         </>
 
     )
