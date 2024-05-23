@@ -4,18 +4,18 @@ import { useNavigate } from 'react-router-dom';
 
 const LoginButton = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem('userId');
-  const userInfo = localStorage.getItem('userInfo');
+  const userID = localStorage.getItem('userId');
+  const userINFO = localStorage.getItem('userInfo');
 
   useEffect(() => {
-    if (token && userInfo) {
+    if (userID && userINFO) {
       navigate('/');
     }
 
-    if (token && !userInfo) {
+    if (userID && !userINFO) {
       navigate('/signIn');
     }
-  }, [token]);
+  }, []);
 
   const handleClickButton = () => {
     localStorage.setItem('userId', String(new Date()));
@@ -24,8 +24,11 @@ const LoginButton = () => {
 
   return (
     <div className='w-full'>
-      <button className='h-[53.7px] w-full' onClick={handleClickButton}>
-        <img src='http://via.placeholder.com/393x58' alt='네이버 로그인 버튼' />
+      <button
+        className='h-[53.7px] w-full bg-gray-300 p-4'
+        onClick={handleClickButton}
+      >
+        산책정보 입력하기
       </button>
     </div>
   );
