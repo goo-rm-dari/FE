@@ -49,6 +49,25 @@ export function MapPage() {
   const spriteSize = { width: imageShowSize, height: imageShowSize };
   const storeOrigin = { x: 0, y: 0 };
 
+  const locationBuffer = useRef([]);
+  const lastUpdateTime = useRef(new Date().getTime());
+  const MAX_BUFFER_SIZE = 5; // Adjust based on the desired smoothing level
+  const MIN_TIME_INTERVAL = 5000; // Minimum time interval in ms
+
+  const calculateDistance = (coord1, coord2) => {
+    const R = 6371; // Radius of the Earth in km
+    const dLat = (coord2.lat - coord1.lat) * (Math.PI / 180);
+    const dLon = (coord2.long - coord1.long) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(coord1.lat * (Math.PI / 180)) *
+        Math.cos(coord2.lat * (Math.PI / 180)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c * 1000; // Distance in meters
+  };
+
   const getFirstLocation = async () => {
     const getLocation = await geolocation.get();
     setLocationList([]);
@@ -61,10 +80,29 @@ export function MapPage() {
 
   const getGeoLocation = async () => {
     const getLocation = await geolocation.get();
-    setNowLocation({
-      long: getLocation?.long,
-      lat: getLocation?.lat,
-    });
+    const nowTime = new Date().getTime();
+    if (
+      calculateDistance(locationList[locationList.length - 1], getLocation) <
+        50 &&
+      nowTime - lastUpdateTime.current > MIN_TIME_INTERVAL
+    ) {
+      locationBuffer.current.push(getLocation);
+      if (locationBuffer.current.length > MAX_BUFFER_SIZE) {
+        locationBuffer.current.shift();
+      }
+      const averageLocation = locationBuffer.current.reduce(
+        (acc, loc) => {
+          acc.lat += loc.lat;
+          acc.long += loc.long;
+          return acc;
+        },
+        { lat: 0, long: 0 },
+      );
+      averageLocation.lat /= locationBuffer.current.length;
+      averageLocation.long /= locationBuffer.current.length;
+      setNowLocation(averageLocation);
+      lastUpdateTime.current = nowTime;
+    }
   };
 
   const getGeoLocationLength = () => {
@@ -87,10 +125,6 @@ export function MapPage() {
     return (kg * distance) / 1000;
   };
 
-  const getDuration = () => {
-    return new Date().getTime() - startTime.getTime();
-  };
-
   const startTimer = () => {
     setStartTime(() => new Date());
     setSavedDuration(0);
@@ -103,34 +137,6 @@ export function MapPage() {
 
   const stopTimer = () => {
     clearInterval(timeRef.current);
-  };
-
-  const isAvailableAppendLocation = () => {
-    try {
-      if (locationList.length < 3) {
-        console.log(getDuration());
-        return true;
-      }
-
-      const prevLocation = locationList[locationList.length - 1];
-      const R = 6371;
-      const dLat = (prevLocation.lat - nowLocation.lat) * (Math.PI / 180);
-      const dLon = (prevLocation.long - nowLocation.long) * (Math.PI / 180);
-      const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(nowLocation.lat * (Math.PI / 180)) *
-          Math.cos(prevLocation.lat) *
-          Math.sin(dLon / 2) *
-          Math.sin(dLon / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      const d = R * c * 1000; // m단위
-
-      if (d < 5) {
-        return false;
-      }
-
-      return true;
-    } catch (error) {}
   };
 
   const handleClickTrash = () => {
@@ -158,14 +164,11 @@ export function MapPage() {
   };
 
   useEffect(() => {
-    if (isAvailableAppendLocation()) {
-      setLocationList([
-        ...locationList,
-        {
-          long: nowLocation.long,
-          lat: nowLocation.lat,
-        },
-      ]);
+    if (
+      locationList.length > 0 &&
+      calculateDistance(locationList[locationList.length - 1], nowLocation) < 50
+    ) {
+      setLocationList([...locationList, nowLocation]);
     }
 
     try {
@@ -178,11 +181,14 @@ export function MapPage() {
     getFirstLocation();
     startTimer();
 
-    setInterval(() => {
+    const geoInterval = setInterval(() => {
       getGeoLocation();
     }, interval);
 
-    return () => stopTimer();
+    return () => {
+      stopTimer();
+      clearInterval(geoInterval);
+    };
   }, []);
 
   return (
@@ -216,8 +222,9 @@ export function MapPage() {
           }}
         />
 
-        {trashLocationList.map((trash: any) => (
+        {trashLocationList.map((trash: any, index: number) => (
           <MapMarker
+            key={index}
             position={{ lat: trash.lat, lng: trash.long }}
             image={{
               src: trashMarkerImage,
