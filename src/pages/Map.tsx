@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Map, MapMarker, Polyline } from "react-kakao-maps-sdk"
 import { geolocation } from "../utils/getLocation"
+import { Button } from "../components/Button"
 
 export function MapPage() {
 
@@ -22,6 +23,10 @@ export function MapPage() {
 
     const [trashCount, setTrashCount] = useState(0)
     const [distance, setDistance] = useState(0)
+    const [kcal, setKcal] = useState(0)
+
+    const [startTime, setStartTime] = useState(new Date())
+    const [duration, setDuration] = useState("")
 
     const interval = 2000
     const markerImage = "/marker.png"
@@ -53,10 +58,26 @@ export function MapPage() {
         return Math.round(moveLine.getLength())
     }
 
+    const calculateKcal = () => {
+        const kg = 70
+        return kg * distance / 1000
+    }
+
+    const getDuration = () => {
+        const milliseconds = new Date().getTime() - startTime.getTime()
+
+        const minutes = Math.floor(milliseconds / 60000);
+        const seconds = ((milliseconds % 60000) / 1000).toFixed(0);
+        return minutes + ":" + (milliseconds < 10 ? '0' : '') + seconds;
+    }
+
     const handleClickTrash = () => {
         setTrashCount((trash) => trash + 1)
     }
 
+    const handleClickStopPlogging = () => {
+        setTrashCount((trash) => trash + 1)
+    }
 
     useEffect(() => {
         setLocationList([...locationList, {
@@ -66,15 +87,22 @@ export function MapPage() {
 
         try {
             setDistance(getGeoLocationLength())
+            setKcal(calculateKcal())
         } catch (error) { }
     }, [nowLocation])
 
     useEffect(() => {
         getFirstLocation()
+
         setInterval(() => {
             getGeoLocation()
 
         }, interval)
+
+        setInterval(() => {
+            setDuration(getDuration())
+
+        }, 1000)
     }, [])
 
     return (
@@ -82,7 +110,7 @@ export function MapPage() {
 
             <Map
                 center={{ lat: firstLocation.lat, lng: firstLocation.long }}
-                style={{ width: "100%", height: "100vh" }}
+                style={{ width: "100%", height: "50vh" }}
             >
 
                 <Polyline
@@ -111,8 +139,39 @@ export function MapPage() {
                 />
             </Map>
 
-            <button onClick={handleClickTrash} className="absolute bottom-0 left-0 w-full bg-indigo-500 rounded-sm p-4 text-white z-10">{trashCount}개의 쓰레기를 주움</button>
-            <div className="fixed top-1 left-1 z-20">{distance}m 이동</div>
+            <b className="absolute top-2 left-2 z-10">{trashCount}개의 쓰레기</b>
+
+            <div className="absolute bottom-0 left-0 w-full h-1/2 bg-white z-10">
+
+                <div className="flex pt-2">
+                    <div className="flex justify-center flex-1">
+                        <b>{kcal}kcal</b>
+
+                    </div>
+                    <div className="flex justify-center flex-1">
+                        <b>{duration}</b>
+
+                    </div>
+                    <div className="flex justify-center flex-1">
+                        <b>{distance / 1000}km</b>
+                    </div>
+                </div>
+
+                <div className="flex pt-2 bottom-4 absolute w-full">
+                    <div className="flex justify-center flex-1">
+                        <Button onClick={handleClickStopPlogging} >플로깅 종료</Button>
+
+                    </div>
+                    <div className="flex justify-center flex-1">
+
+                    </div>
+                    <div className="flex justify-center flex-1">
+                        <Button onClick={handleClickTrash} >쓰레기 주움</Button>
+                    </div>
+                </div>
+            </div>
+
+
         </>
 
     )
