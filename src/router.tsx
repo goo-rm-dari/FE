@@ -1,14 +1,15 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import DynamicRouter from './components/DynamicRouter';
+import { CheckTrashPage } from './pages/CheckTrash';
 // import { CountdownPage } from './pages/Countdown';
 import { DonePage } from './pages/Done';
+import LoadingPage from './pages/Loading';
 // import { GyroscopePage } from './pages/Gyroscope';
 import Main from './pages/Main';
 import MapPage from './pages/MapPage';
 import LoginPage from './pages/login';
 import SignInPage from './pages/signIn';
-import { CheckTrashPage } from './pages/CheckTrash';
 
 export const router = createBrowserRouter([
   {
@@ -66,5 +67,9 @@ export const router = createBrowserRouter([
         <SignInPage />
       </DynamicRouter>
     ),
+  },
+  {
+    path: '/loading',
+    element: <LoadingPage />,
   },
 ]);

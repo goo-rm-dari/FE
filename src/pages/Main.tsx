@@ -1,37 +1,36 @@
 import { useEffect, useState } from 'react';
 
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 import Icon from '../components/Icon/icon';
 import { geolocation } from '../utils/getLocation';
-import axios from 'axios';
-
 
 const Main = () => {
   const [coordinates, setCoordinates] = useState<{
     lat: number;
     long: number;
   }>({ lat: 0, long: 0 });
-  const [DummyData, setDummyData] = useState([
-
-  ])
+  const [DummyData, setDummyData] = useState([]);
 
   const [address, setAddress] = useState<string>('서귀포시 성산읍');
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
   const getRecords = async () => {
-
     try {
       const userId = localStorage.getItem('userId');
 
-      const response = await axios.get(`https://k62968f39024da.user-app.krampoline.com/api/plogging-records/all/${userId}`)
+      const response = await axios.get(
+        `https://k62968f39024da.user-app.krampoline.com/api/plogging-records/all/${userId}`,
+      );
+
       const result = response.data.data.info;
 
-      console.log(result)
+      console.log(result);
 
       if (result.length > 0) {
-        setDummyData(() => [])
+        setDummyData(() => []);
       }
 
       for (let index = 0; index < result.length; index++) {
@@ -44,16 +43,14 @@ const Main = () => {
           runTime: element.movingTime,
           kcal: parseFloat(element.totalCalorie),
           distance: parseFloat(element.movingDistance),
-        })
+        });
 
-        setDummyData(() => [...DummyData])
+        setDummyData(() => [...DummyData]);
       }
-
-
     } catch (err) {
-      console.log("Error >>", err);
+      console.log('Error >>', err);
     }
-  }
+  };
 
   useEffect(() => {
     const fetchGeolocation = async () => {
@@ -70,7 +67,7 @@ const Main = () => {
     };
 
     fetchGeolocation();
-    getRecords()
+    getRecords();
   }, []);
 
   useEffect(() => {
@@ -93,9 +90,16 @@ const Main = () => {
   if (loading) {
     return (
       <div className='flex h-full items-center justify-center'>
-        <span className='material-symbols-outlined animate-spin'>
-          progress_activity
-        </span>
+        <img
+          src='/img_trash.png'
+          alt='Image 1'
+          className='absolute left-0 top-1/2 h-[60px] w-[60px] opacity-100'
+        />
+        <img
+          src='/turtle.png'
+          alt='Image 2'
+          className='animate-move2 absolute left-[60px] top-1/2 h-[60px] w-[80px] -translate-y-1/2 transform'
+        />
       </div>
     );
   }

@@ -4,7 +4,6 @@ import clsx from 'clsx';
 
 const Introduction = () => (
   <div className='flex flex-col items-center'>
-    <img src={'https://picsum.photos'} />
     <p className='text-center text-gray-500'>text</p>
   </div>
 );
@@ -26,9 +25,7 @@ const ResponsiveLayoutWrapper = ({ children }: PropsWithChildren) => {
       <div className='hidden shrink sm:flex'>
         <Introduction />
       </div>
-      <RootLayout>
-        <Suspense fallback={<h1></h1>}>{children}</Suspense>
-      </RootLayout>
+      <RootLayout>{children}</RootLayout>
     </div>
   );
 };
