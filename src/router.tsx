@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import App from './App';
+import DynamicRouter from './components/DynamicRouter';
 import { GyroscopePage } from './pages/Gyroscope';
 import LoginPage from './pages/login';
 import SignInPage from './pages/signIn';
@@ -8,11 +9,19 @@ import SignInPage from './pages/signIn';
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: (
+      <DynamicRouter>
+        <App />
+      </DynamicRouter>
+    ),
   },
   {
     path: '/test',
-    element: <GyroscopePage />,
+    element: (
+      <DynamicRouter>
+        <GyroscopePage />
+      </DynamicRouter>
+    ),
   },
   {
     path: '/login',
@@ -20,6 +29,10 @@ export const router = createBrowserRouter([
   },
   {
     path: 'signIn',
-    element: <SignInPage />,
+    element: (
+      <DynamicRouter>
+        <SignInPage />
+      </DynamicRouter>
+    ),
   },
 ]);
