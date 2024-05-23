@@ -33,7 +33,7 @@ export function MapPage() {
     const [isClock, setIsClock] = useState(true)
     const timeRef = useRef<any>(null)
 
-    const interval = 2000
+    const interval = 1000
     const markerImage = "/marker.png"
     const trashMarkerImage = "/trash.jpeg"
 
@@ -82,6 +82,43 @@ export function MapPage() {
         return new Date().getTime() - startTime.getTime()
     }
 
+
+    const startTimer = () => {
+        setStartTime(() => new Date())
+        setSavedDuration(0)
+
+        timeRef.current = setInterval(() => {
+            setDuration((time) => time + 1000)
+            console.log("AAAA")
+        }, 1000)
+    }
+
+    const stopTimer = () => {
+        clearInterval(timeRef.current)
+    }
+
+    const isAvailableAppendLocation = () => {
+        try {
+            if (locationList.length < 3) {
+                return true
+            }
+
+            const prevLocation = locationList[locationList.length - 1]
+            const R = 6371;
+            const dLat = (prevLocation.lat - nowLocation.lat) * (Math.PI / 180)
+            const dLon = (prevLocation.long - nowLocation.long) * (Math.PI / 180)
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos((nowLocation.lat) * (Math.PI / 180)) * Math.cos((prevLocation.lat)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            const d = (R * c) * 1000; // m단위
+
+            if (d < 5) {
+                return false
+            }
+
+            return true
+        } catch (error) { }
+    }
+
     const handleClickTrash = () => {
         setTrashCount((trash) => trash + 1)
         addTrash()
@@ -104,25 +141,16 @@ export function MapPage() {
         startTimer()
     }
 
-    const startTimer = () => {
-        setStartTime(() => new Date())
-        setSavedDuration(0)
-
-        timeRef.current = setInterval(() => {
-            setDuration((time) => time + 1000)
-            console.log("AAAA")
-        }, 1000)
-    }
-
-    const stopTimer = () => {
-        clearInterval(timeRef.current)
-    }
 
     useEffect(() => {
-        setLocationList([...locationList, {
-            long: nowLocation.long,
-            lat: nowLocation.lat
-        }])
+        if (isAvailableAppendLocation()) {
+            setLocationList([...locationList, {
+                long: nowLocation.long,
+                lat: nowLocation.lat
+            }])
+        }
+
+
 
         try {
             setDistance(getGeoLocationLength())
@@ -195,7 +223,7 @@ export function MapPage() {
 
             <b className="absolute top-2 left-2 z-10">{trashCount}개의 쓰레기</b>
 
-            <div className="absolute bottom-0 left-0 w-full h-1/2 bg-white z-10">
+            <div className="relative bottom-0 left-0 w-full h-1/2 bg-white z-10">
 
                 <div className="flex pt-2">
                     <div className="flex justify-center flex-1">
