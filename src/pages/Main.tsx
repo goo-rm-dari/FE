@@ -36,14 +36,17 @@ const Main = () => {
 
       for (let index = 0; index < result.length; index++) {
         const element = result[index];
-        setDummyData([...DummyData, {
+
+        DummyData.push({
           id: index,
           date: element.createdTime,
           trash: parseFloat(element.trashCount),
           runTime: element.movingTime,
           kcal: parseFloat(element.totalCalorie),
           distance: parseFloat(element.movingDistance),
-        }])
+        })
+
+        setDummyData(() => [...DummyData])
       }
 
 
