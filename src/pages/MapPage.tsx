@@ -328,11 +328,15 @@ function MapPage() {
           <div className='flex flex-1 justify-end'>
             {isClock ? (
               <CircleButton onClick={handleClickStopClock}>
-                <span className='material-symbols-outlined'>pause</span>
+                <span className='material-symbols-outlined text-[50px]'>
+                  pause
+                </span>
               </CircleButton>
             ) : (
               <CircleButton color='#7FD6E1' onClick={handleClickStartClock}>
-                <span className='material-symbols-outlined'>play_arrow</span>
+                <span className='material-symbols-outlined text-[50px]'>
+                  play_arrow
+                </span>
               </CircleButton>
             )}
           </div>
