@@ -119,6 +119,7 @@ const Main = () => {
         </span>
         <span>플로깅 어떠세요 ?</span>
       </div>
+
       <div className='flex grow flex-col gap-4 overflow-y-auto pt-8'>
         {DummyData.length === 0 ? (
           <div className='mt-[120px] flex w-full flex-col justify-center gap-10'>
