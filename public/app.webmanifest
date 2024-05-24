@@ -1,16 +1,31 @@
 {
-  "name": "Progressive Web App",
-  "short_name": "app",
-  "description": "app",
+  "name": "BaRoGing",
+  "short_name": "바로깅",
+  "description": "바로깅",
   "icons": [
     {
-      "src": "icons/icon-32x32.png",
-      "sizes": "32x32",
+      "src": "icons/114.png",
+      "sizes": "114x114",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/120.png",
+      "sizes": "120x120",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/180.png",
+      "sizes": "180x180",
       "type": "image/png"
     },
     {
       "src": "icons/icon-512x512.png",
       "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/1024.png",
+      "sizes": "1024x1024",
       "type": "image/png"
     }
   ],
