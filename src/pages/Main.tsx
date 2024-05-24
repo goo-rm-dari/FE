@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 import Icon from '../components/Icon/icon';
+import formatTime from '../utils/format';
 import { geolocation } from '../utils/getLocation';
 
 const Main = () => {
@@ -155,7 +156,7 @@ const Main = () => {
                 <div className='flex w-full items-center justify-between gap-6 px-10 font-bold'>
                   <span className='flex items-center gap-1'>
                     <Icon id='time' />
-                    {parseInt(data.runTime) / 1000}s
+                    {formatTime(data.runTime)}
                   </span>
                   <span>{`${data.kcal} Kcal`}</span>
                   <span>{`${data.distance} Km`}</span>
