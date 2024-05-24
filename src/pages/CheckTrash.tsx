@@ -65,8 +65,18 @@ function Main({ close, addTrash }: any) {
         } catch (error) { }
     };
 
-    useEffect(() => {
+    const drawImageIcon = () => {
+        var img = new Image();
+        const context = canvasRef.current.getContext('2d');
 
+        img.onload = function () {
+            context.drawImage(img, canvasRef.current.width / 2 - 16, canvasRef.current.height / 2 - 16);
+        }
+        img.src = "/imageicon.svg";
+    }
+
+    useEffect(() => {
+        drawImageIcon()
 
         //startWebcam();
     }, []);
@@ -101,6 +111,8 @@ function Main({ close, addTrash }: any) {
                         setIsUpload(false)
                         const context = canvasRef.current.getContext('2d');
                         context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+                        drawImageIcon()
+
                     }
 
                 }, 3000)
@@ -125,7 +137,6 @@ function Main({ close, addTrash }: any) {
             <div className="pt-4 p-6">
                 <video ref={videoRef} style={{ display: 'none', width: "100%" }} autoPlay playsInline />
                 <canvas style={{ width: "100%", border: "0.1rem solid #7FD6E1", borderRadius: "0.25rem", backgroundColor: "#7FD6E11A" }} ref={canvasRef}></canvas>
-
             </div>
 
 
@@ -221,7 +232,7 @@ function FileUpload({ canvas, image, predict }: any) {
             <input className="form-control hidden" type="file" ref={fileRef} id="formFile" onChange={handleFileChange} />
 
             <button onClick={handleClickUpload} className='w-full bg-gray-400 p-3 rounded-md text-gray-50'>
-                인증하기
+                사진찍기
             </button>
         </div>
     )

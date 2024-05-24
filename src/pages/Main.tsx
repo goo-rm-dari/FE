@@ -134,7 +134,7 @@ const Main = () => {
             <div className='flex w-full items-center gap-6 px-10'>
               <span className='flex items-center gap-1'>
                 <Icon id='time' />
-                {data.runTime}
+                {parseInt(data.runTime) / 1000}s
               </span>
               <span>{`${data.kcal} Kcal`}</span>
               <span>{`${data.distance} Km`}</span>
