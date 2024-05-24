@@ -192,6 +192,7 @@ function MapPage() {
         ((duration % 60000) / 1000).toFixed(0).padStart(2, '0'),
       distance: (distance / 1000).toFixed(2),
       kcal: kcal,
+      trashList: trashLocationList
     };
     console.log(createPloggingForm);
     sendRecords(createPloggingForm)
@@ -301,28 +302,28 @@ function MapPage() {
       <div className='relative bottom-0 left-0 z-10 h-1/2 w-full bg-white'>
         <TopShadow />
 
-        <div className='absolute flex px-3 pt-2' style={{ top: '0px' }}>
-          <Title>플로깅으로 칼로리 태우는중</Title>
+        <div className='absolute flex px-6 pt-2' style={{ top: '0px' }}>
+          <Title>플로깅으로 <b style={{ color: "#7FD6E1" }}>{trashCount * 3} kcal </b> <br></br> 더 태우는중</Title>
         </div>
 
-        <div className='flex pt-2'>
-          <div className='flex flex-1 flex-col items-center justify-center gap-2'>
+        <div className='flex pt-10'>
+          <div className='flex flex-1 flex-col items-center justify-center gap-3'>
             <b>
               {Math.floor(duration / 60000) +
                 ':' +
                 (duration < 10 ? '0' : '') +
                 ((duration % 60000) / 1000).toFixed(0)}
             </b>
-            <p style={{ color: '#828282' }}>시간</p>
+            <p style={{ color: '#828282', fontSize: "1.15rem" }}>시간</p>
           </div>
-          <div className='flex flex-1 flex-col items-center justify-center gap-2'>
+          <div className='flex flex-1 flex-col items-center justify-center gap-3'>
             <b style={{ fontSize: '1.5rem' }}>{Math.round(kcal)}kcal</b>
-            <p>칼로리</p>
+            <p style={{ fontSize: "1.15rem" }}>칼로리</p>
           </div>
 
-          <div className='flex flex-1 flex-col items-center justify-center gap-2'>
+          <div className='flex flex-1 flex-col items-center justify-center gap-3'>
             <b>{distance / 1000}km</b>
-            <p style={{ color: '#828282' }}>거리</p>
+            <p style={{ color: '#828282', fontSize: "1.15rem" }}>거리</p>
           </div>
         </div>
 
@@ -344,7 +345,7 @@ function MapPage() {
           >
             {isClock ? (
               <OutlineButton onClick={handleClickTrash}>
-                쓰레기 주움
+                쓰레기
               </OutlineButton>
             ) : (
               <OutlineWhiteButton onClick={handleClickStopPlogging}>
