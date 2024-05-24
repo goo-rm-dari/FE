@@ -61,7 +61,7 @@ export function DonePage() {
                         <p style={{ color: '#828282', fontSize: "1.15rem" }}>시간</p>
                     </div>
                     <div className='flex flex-1 flex-col items-center justify-center gap-3'>
-                        <b style={{ fontSize: "1.5rem" }}>{get().kcal}kcal</b>
+                        <b style={{ fontSize: "1.5rem" }}>{Math.round(get().kcal)}kcal</b>
                         <p style={{ fontSize: "1.15rem" }}>칼로리</p>
                     </div>
 
