@@ -165,7 +165,10 @@ function Main({ close, addTrash }: any) {
 
             ) : (
                 <>
-                    {predictionsMap}
+                    <div style={{ backgroundColor: "#dfe1e8", borderRadius: "0.2rem", padding: "0.2rem", color: "#000000", marginLeft: "1.5rem", marginRight: "1.5rem" }}>
+                        {predictionsMap}
+
+                    </div>
                 </>
 
             )}
@@ -176,8 +179,8 @@ function Main({ close, addTrash }: any) {
 
 function PredictAccuracyItem({ name, probability }: any) {
     return (
-        <div className="bg-light p-2 mb-1" role="alert">
-            {name} <span className="material-symbols-outlined">chevron_right</span> {probability.toFixed(4)}% 일치율
+        <div className="bg-light mb-1" role="alert">
+            {name} <b>{probability.toFixed(4) * 100}% 일치율</b>
         </div>
     )
 }

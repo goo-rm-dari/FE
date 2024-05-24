@@ -136,7 +136,7 @@ const Main = () => {
                 <Icon id='time' />
                 {parseInt(data.runTime) / 1000}s
               </span>
-              <span>{`${data.kcal} Kcal`}</span>
+              <span>{`${Math.round(data.kcal)} Kcal`}</span>
               <span>{`${data.distance} Km`}</span>
             </div>
           </div>
